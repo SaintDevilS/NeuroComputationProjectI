@@ -108,18 +108,18 @@ classdef ImageCompression
             compressed_block = o1;
         end
         
-        function [W1, W2, compressed_blocks] = train_on_blocks(obj, blocks_of_img)
+        function [W1, W2, compressed_blocks_as_vector] = train_on_blocks(obj, blocks_of_img)
             
             W1 = nan;
             W2 = nan;
             dim_of_blocks = size(blocks_of_img);
-            compressed_blocks = zeros( obj.first_and_output_layers / obj.hidden_layer / 2, obj.first_and_output_layers / obj.hidden_layer / 2, dim_of_blocks(3), dim_of_blocks(4));
+            compressed_blocks_as_vector = zeros( obj.hidden_layer, 1, dim_of_blocks(3), dim_of_blocks(4));
 
             for i = 1:dim_of_blocks(3)
                 for j = 1:dim_of_blocks(4)
                     
                     [W1, W2, compressed_block] = obj.train_on_block( blocks_of_img(:, :, i, j), W1, W2);
-                    compressed_blocks(:, :, i, j) = compressed_block;
+                    compressed_blocks_as_vector(:, :, i, j) = compressed_block;
                 end
             end
         end
@@ -138,6 +138,28 @@ classdef ImageCompression
         function output_block = put_block_through_weights(obj, a_block, W1, W2)
             output_block = a_block(:)' * W1 * W2;
         end
+
+        function output_blocks_of_img = put_compressed_blocks_through_second_weight(obj, compressed_blocks, W2)
+            dims_of_compressed_blocks = size(compressed_blocks);
+            output_blocks_of_img = zeros(sqrt(obj.first_and_output_layers), sqrt(obj.first_and_output_layers), dims_of_compressed_blocks(3), dims_of_compressed_blocks(4));
+            
+            for i = 1:dims_of_compressed_blocks(3)
+                for j = 1:dims_of_compressed_blocks(4)
+                    output_blocks_of_img(:, :, i, j) = vec2mat(obj.put_comp_block_through_weight( compressed_blocks(:, :, i, j), W2), 8);
+                end
+            end 
+        end
+        
+        function decompressed_block = put_comp_block_through_weight(obj, comp_block, W2)
+            decompressed_block = comp_block' * W2;
+        end
+        
+        function grayscale_img = decompressed_img_to_grayscale(obj, decomp_img)
+            max_value = max(abs(min(min(decomp_img))), abs(max(max(decomp_img))));
+            norm_img = decomp_img / max_value;
+            
+            grayscale_img = obj.normed_img_to_grayscale(norm_img);
+            
+        end
     end
 end
-
