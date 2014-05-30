@@ -1,13 +1,14 @@
-function display_reconstructed_img ( )
+function display_decompressed_img ( )
 %UNTITLED3 Summary of this function goes here
 %   Detailed explanation goes here
 
-    before_img = imread('LENNA.JPG');
     load('weights'); 
     
     ict = ImageCompression();
     
-    normed_img = ict.join_blocks(blocks_of_img);
+    output_blocks = ict.put_all_blocks_through_weights(blocks_of_img, W1, W2);
+    
+    normed_img = ict.join_blocks(output_blocks);
     img = ict.normed_img_to_grayscale(normed_img);
     
     imshow(img);
