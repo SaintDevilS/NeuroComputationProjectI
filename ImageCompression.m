@@ -126,13 +126,13 @@ classdef ImageCompression
             
             for i = 1:dim_of_blocks(3)
                 for j = 1:dim_of_blocks(4)
-                    output_blocks_of_img(:, :, i, j) = obj.put_block_through_weights( blocks_of_img(:, :, i, j), W1, W2);
+                    output_blocks_of_img(:, :, i, j) = vec2mat(obj.put_block_through_weights( blocks_of_img(:, :, i, j), W1, W2), 8);
                 end
             end 
         end
         
         function output_block = put_block_through_weights(obj, a_block, W1, W2)
-            output_block = a_block * W1 * W2;
+            output_block = a_block(:)' * W1 * W2;
         end
     end
 end
