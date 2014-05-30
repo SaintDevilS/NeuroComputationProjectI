@@ -120,6 +120,20 @@ classdef ImageCompression
             end
         end
         
+        function output_blocks_of_img = put_all_blocks_through_weights(obj, blocks_of_img, W1, W2)
+            output_blocks_of_img = zeros(size(blocks_of_img));
+            dim_of_blocks = size(blocks_of_img);
+            
+            for i = 1:dim_of_blocks(3)
+                for j = 1:dim_of_blocks(4)
+                    output_blocks_of_img(:, :, i, j) = obj.put_block_through_weights( blocks_of_img(:, :, i, j), W1, W2);
+                end
+            end 
+        end
+        
+        function output_block = put_block_through_weights(obj, a_block, W1, W2)
+            output_block = a_block * W1 * W2;
+        end
     end
 end
 
