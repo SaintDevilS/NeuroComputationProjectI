@@ -8,7 +8,7 @@ function train_and_save_weights( )
     blocks_of_img = ict.split_image(normed);
     [W1, W2] = ict.train_on_blocks(blocks_of_img);
 
-    save('weights', 'blocks_of_img W1 W2');
+    save('weights', 'blocks_of_img', 'W1' , 'W2');
 
 end
 
