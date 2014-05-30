@@ -32,6 +32,7 @@ classdef ImageCompression
                 end
             end
         end
+        
         function blocks_of_img = split_image(obj, image)            
             block_size = [8,8];
             [rows, cols] = size(image);
