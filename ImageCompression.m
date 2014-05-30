@@ -28,20 +28,19 @@ classdef ImageCompression
             
             for i = 1:m
                 for j = 1:n
-                    grayscale_img = norm_img(i, j) * 128 + 128;
+                    grayscale_img(i, j) = norm_img(i, j) * 128 + 128;
                 end
             end
         end
         
-        function blocks_of_img = split_image(obj, image)            
-            block_size = [8,8];
+        function blocks_of_img = split_image(obj, image, row_size, col_size)            
             [rows, cols] = size(image);
             
-            blocks_of_img = zeros(block_size(1), block_size(2), rows / block_size(1), cols / block_size(2));
+            blocks_of_img = zeros(row_size, col_size, rows / row_size, cols / col_size());
             
-            for i = 1:rows / block_size(1)
-                for j = 1:cols / block_size(2)
-                    blocks_of_img(:,:,i,j)=image((i-1)*8+1:(i-1)*8+8, (j-1)*8+1:(j-1)*8+8);
+            for i = 1:rows / row_size
+                for j = 1:cols / col_size
+                    blocks_of_img(:,:,i,j)=image((i-1)*row_size+1:(i-1)*row_size + col_size, (j-1)*col_size+1:(j-1)*col_size+row_size);
                 end
             end
         end
