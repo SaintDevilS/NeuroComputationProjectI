@@ -26,6 +26,7 @@ classdef ImageCompressionTester < matlab.unittest.TestCase
             expected_img = [1 2 5 6; 3 4 7 8; 9 10 13 14; 11 12 15 16];
             
             testCase.verifyEqual(img, expected_img);
+        end
     end
     
 end
