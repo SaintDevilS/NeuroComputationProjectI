@@ -23,7 +23,7 @@ classdef ImageCompression
         end
         
         function grayscale_img = normed_img_to_grayscale(obj, norm_img)
-            [m, n] = size(image);
+            [m, n] = size(norm_img);
             grayscale_img = zeros(m, n);
             
             for i = 1:m
