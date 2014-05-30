@@ -31,6 +31,8 @@ classdef ImageCompression
                     grayscale_img(i, j) = norm_img(i, j) * 128 + 128;
                 end
             end
+            
+            grayscale_img = uint8(grayscale_img);
         end
         
         function blocks_of_img = split_image(obj, image, row_size, col_size)            

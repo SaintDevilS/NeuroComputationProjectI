@@ -10,7 +10,7 @@ function display_reconstructed_img ( )
     normed_img = ict.join_blocks(blocks_of_img);
     img = ict.normed_img_to_grayscale(normed_img);
     
-    imshow(uint8(img));
+    imshow(img);
     
 
 end
