@@ -27,6 +27,26 @@ classdef ImageCompressionTester < matlab.unittest.TestCase
             
             testCase.verifyEqual(img, expected_img);
         end
+        
+        function test_split_and_join1(testCase)
+            img = [1 2 5 6; 3 4 7 8; 9 10 13 14; 11 12 15 16];
+            
+            blocks_of_img = testCase.img_comp.split_image(img);
+            
+            after_merge_img = testCase.img_comp.join_blocks(blocks_of_img);
+            
+            testCase.verifyEqual(after_merge_img, img);
+        end
+        
+        function test_split_and_join(testCase)
+            img = imread('LENNA.JPG');
+            
+            blocks_of_img = testCase.img_comp.split_image(img);
+            
+            after_merge_img = testCase.img_comp.join_blocks(blocks_of_img);
+            
+            testCase.verifyEqual(after_merge_img, img);
+        end
     end
     
 end
