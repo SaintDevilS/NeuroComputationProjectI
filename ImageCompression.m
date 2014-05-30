@@ -22,6 +22,16 @@ classdef ImageCompression
             end
         end
         
+        function grayscale_img = normed_img_to_grayscale(obj, norm_img)
+            [m, n] = size(image);
+            grayscale_img = zeros(m, n);
+            
+            for i = 1:m
+                for j = 1:n
+                    grayscale_img = norm_img(i, j) * 128 + 128;
+                end
+            end
+        end
         function blocks_of_img = split_image(obj, image)            
             block_size = [8,8];
             [rows, cols] = size(image);
@@ -31,6 +41,19 @@ classdef ImageCompression
             for i = 1:rows / block_size(1)
                 for j = 1:cols / block_size(2)
                     blocks_of_img(:,:,i,j)=image((i-1)*8+1:(i-1)*8+8, (j-1)*8+1:(j-1)*8+8);
+                end
+            end
+        end
+        
+        function img = join_blocks(obj, blocks_of_img)
+            dims_of_blocks = size(blocks_of_img);
+            
+            img = zeros( dims_of_blocks(1) * dims_of_blocks(3), dims_of_blocks(2) * dims_of_blocks(4));
+            for i = 1:dims_of_blocks(3)
+                for j = 1:dims_of_blocks(4)
+                    img_row_indices_for_block_i_j = (i-1) * dims_of_blocks(1) + 1: (i-1) * dims_of_blocks(1) + dims_of_blocks(2);
+                    img_col_indices_for_block_i_j = (j-1)* dims_of_blocks(2) + 1: (j-1) * dims_of_blocks(2) + dims_of_blocks(1);
+                    img( img_row_indices_for_block_i_j , img_col_indices_for_block_i_j) = blocks_of_img(:, :, i, j);
                 end
             end
         end
