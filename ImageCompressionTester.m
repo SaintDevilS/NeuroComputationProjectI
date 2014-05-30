@@ -14,7 +14,18 @@ classdef ImageCompressionTester < matlab.unittest.TestCase
             testCase.verifyEqual(dims_of_blocks(3), 2);
             testCase.verifyEqual(dims_of_blocks(4), 2);
         end
-       
+        
+        function test_join_blocks_of_img(testCase)
+            blocks = [1 2; 3 4];
+            blocks(:, :, 1, 2) = [5 6; 7 8];
+            blocks(:, :, 2, 1) = [9 10; 11 12];
+            blocks(:, :, 2, 2) = [13 14; 15 16];
+            
+            img = testCase.img_comp.join_blocks(blocks);
+            
+            expected_img = [1 2 5 6; 3 4 7 8; 9 10 13 14; 11 12 15 16];
+            
+            testCase.verifyEqual(img, expected_img);
     end
     
 end
