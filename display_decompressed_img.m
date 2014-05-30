@@ -3,13 +3,14 @@ function display_decompressed_img ( )
 %   Detailed explanation goes here
 
     load('weights'); 
+    load('compressed_blocks');
     
     ict = ImageCompression();
     
-    output_blocks = ict.put_all_blocks_through_weights(blocks_of_img, W1, W2);
+    output_blocks = ict.put_compressed_blocks_through_second_weight(compressed_blocks, W2);
     
     normed_img = ict.join_blocks(output_blocks);
-    img = ict.normed_img_to_grayscale(normed_img);
+    img = ict.decompressed_img_to_grayscale(normed_img);
     
     imshow(img);
     
