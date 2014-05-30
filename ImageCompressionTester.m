@@ -6,7 +6,7 @@ classdef ImageCompressionTester < matlab.unittest.TestCase
         function test_split_image(testCase)
             mat_of_img = rand(16);
             
-            blocks_of_mat = testCase.img_comp.split_image(mat_of_img);
+            blocks_of_mat = testCase.img_comp.split_image(mat_of_img, 8, 8);
             
             dims_of_blocks = size(blocks_of_mat);
             testCase.verifyEqual(dims_of_blocks(1), 8);
@@ -31,7 +31,7 @@ classdef ImageCompressionTester < matlab.unittest.TestCase
         function test_split_and_join1(testCase)
             img = [1 2 5 6; 3 4 7 8; 9 10 13 14; 11 12 15 16];
             
-            blocks_of_img = testCase.img_comp.split_image(img);
+            blocks_of_img = testCase.img_comp.split_image(img, 2, 2);
             
             after_merge_img = testCase.img_comp.join_blocks(blocks_of_img);
             
@@ -41,11 +41,11 @@ classdef ImageCompressionTester < matlab.unittest.TestCase
         function test_split_and_join(testCase)
             img = imread('LENNA.JPG');
             
-            blocks_of_img = testCase.img_comp.split_image(img);
+            blocks_of_img = testCase.img_comp.split_image(img, 8, 8);
             
             after_merge_img = testCase.img_comp.join_blocks(blocks_of_img);
             
-            testCase.verifyEqual(after_merge_img, img);
+            testCase.verifyEqual(uint8(after_merge_img), img);
         end
     end
     
