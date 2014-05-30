@@ -5,10 +5,11 @@ function train_and_save_weights( )
     ict = ImageCompression
 
     normed = ict.normalize_image(img);
-    blocks_of_img = ict.split_image(normed, 8, 8);
+    blocks_of_img = ict.split_image(normed);
     [W1, W2, compressed_blocks] = ict.train_on_blocks(blocks_of_img);
 
-    save('compressed_blocks', 'compressed_blocks');
+    save('weights', 'W1' , 'W2');
+    save('blocks_of_img', 'blocks_of_img');
 
 end
 
