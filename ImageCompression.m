@@ -68,7 +68,7 @@ classdef ImageCompression
             end
         end        
         
-        function [corrected_W1, corrected_W2, compressed_block] = train_on_block(obj, a_block, W1, W2)
+        function [corrected_W1, corrected_W2] = train_on_block(obj, a_block, W1, W2)
             if length(W1) == 1
                 W1 = randn(obj.first_and_output_layers, obj.hidden_layer);
                 W2 = randn(obj.hidden_layer, obj.first_and_output_layers);
@@ -105,21 +105,18 @@ classdef ImageCompression
             
             corrected_W1 = W1;
             corrected_W2 = W2;
-            compressed_block = o1;
         end
         
-        function [W1, W2, compressed_blocks_as_vector] = train_on_blocks(obj, blocks_of_img)
+        function [W1, W2] = train_on_blocks(obj, blocks_of_img)
             
             W1 = nan;
             W2 = nan;
             dim_of_blocks = size(blocks_of_img);
-            compressed_blocks_as_vector = zeros( obj.hidden_layer, 1, dim_of_blocks(3), dim_of_blocks(4));
 
             for i = 1:dim_of_blocks(3)
                 for j = 1:dim_of_blocks(4)
                     
-                    [W1, W2, compressed_block] = obj.train_on_block( blocks_of_img(:, :, i, j), W1, W2);
-                    compressed_blocks_as_vector(:, :, i, j) = compressed_block;
+                    [W1, W2] = obj.train_on_block( blocks_of_img(:, :, i, j), W1, W2);
                 end
             end
         end
