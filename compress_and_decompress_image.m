@@ -1,4 +1,4 @@
-function compress_and_decompress_image ( blocks_of_img)
+function compress_and_decompress_image (img)
 %UNTITLED3 Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -6,6 +6,10 @@ function compress_and_decompress_image ( blocks_of_img)
     
     ict = ImageCompression();
     
+    normed = ict.normalize_image(img);
+    blocks_of_img = ict.split_image(normed, 8, 8);
+    
+
     % compression
     compressed_blocks = ict.put_blocks_through_first_weight(blocks_of_img, W1);
     
@@ -20,4 +24,3 @@ function compress_and_decompress_image ( blocks_of_img)
     imshow(img);
     
 end
-
