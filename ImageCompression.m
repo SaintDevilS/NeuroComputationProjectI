@@ -5,8 +5,8 @@ classdef ImageCompression
     properties
         first_and_output_layers = 64;
         hidden_layer = 16;    
-        iters = 100;
         mew = 0.4;
+        tol = 0.1;
     end
     
     methods
@@ -68,7 +68,7 @@ classdef ImageCompression
             end
         end        
         
-        function [corrected_W1, corrected_W2] = train_on_block(obj, a_block, W1, W2)
+        function [corrected_W1, corrected_W2, error_vec] = train_on_block(obj, a_block, W1, W2)
             if length(W1) == 1
                 W1 = randn(obj.first_and_output_layers, obj.hidden_layer);
                 W2 = randn(obj.hidden_layer, obj.first_and_output_layers);
@@ -77,31 +77,28 @@ classdef ImageCompression
             weights_of_bias1 = randn(1, obj.hidden_layer);
             weights_of_bias2 = randn(1, obj.first_and_output_layers);
            
-            for i = 1:obj.iters
-                W1_with_bias = [W1' weights_of_bias1']';
-                W2_with_bias = [W2' weights_of_bias2']';
+            W1_with_bias = [W1' weights_of_bias1']';
+            W2_with_bias = [W2' weights_of_bias2']';
 
-                input_vec = [a_block(:)' 1];
+            input_vec = [a_block(:)' 1];
 
                 
-                o1 = obj.sigmoidal_func_on_each(input_vec * W1_with_bias);
-                o2 =  obj.sigmoidal_func_on_each([o1' 1] * W2_with_bias);
+            o1 = obj.sigmoidal_func_on_each(input_vec * W1_with_bias);
+            o2 =  obj.sigmoidal_func_on_each([o1' 1] * W2_with_bias);
                 
-                ones_length_of_o1 = ones(length(o1), 1);
-                ones_length_of_o2 = ones(length(o2), 1);
+            ones_length_of_o1 = ones(length(o1), 1);
+            ones_length_of_o2 = ones(length(o2), 1);
                 
-                D2 = diag(o2 .* (ones_length_of_o2 - o2));
-                D1 = diag(o1 .* (ones_length_of_o1 - o1));
+            D2 = diag(o2 .* (ones_length_of_o2 - o2));
+            D1 = diag(o1 .* (ones_length_of_o1 - o1));
+                
+            error_vec = (o2 - a_block(:));  % used t = a_block since we want the same thing as the input
 
-                error_vec = (o2 - a_block(:));  % used t = a_block since we want the same thing as the input
+            lambda2 = D2 * error_vec;
+            lambda1 = D1 * W2 * lambda2;
 
-                lambda2 = D2 * error_vec;
-
-                lambda1 = D1 * W2 * lambda2;
-
-                W2 = W2 - obj.mew * (lambda2 * o1')';
-                W1 = W1 - obj.mew * (lambda1 * a_block(:)')';
-            end
+            W2 = W2 - obj.mew * (lambda2 * o1')';
+            W1 = W1 - obj.mew * (lambda1 * a_block(:)')';
             
             corrected_W1 = W1;
             corrected_W2 = W2;
@@ -112,12 +109,14 @@ classdef ImageCompression
             W1 = nan;
             W2 = nan;
             dim_of_blocks = size(blocks_of_img);
-
-            for i = 1:dim_of_blocks(3)
-                for j = 1:dim_of_blocks(4)
-                    
-                    [W1, W2] = obj.train_on_block( blocks_of_img(:, :, i, j), W1, W2);
-                end
+            
+            total_error = obj.tol + 1;
+            while (total_error > obj.tol)
+                i = randi(dim_of_blocks(3));
+                j = randi(dim_of_blocks(4));
+                
+                [W1, W2, error_vec] = obj.train_on_block( blocks_of_img(:, :, i, j), W1, W2);
+                total_error = norm(error_vec);
             end
         end
 
