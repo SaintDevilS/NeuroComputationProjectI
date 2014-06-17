@@ -8,7 +8,7 @@ function train_and_save_weights( )
     blocks_of_img = ict.split_image(normed, 8, 8);
     [W1, W2] = ict.train_on_blocks(blocks_of_img);
 
-%    save('weights', 'W1' , 'W2');
+    save('weights', 'W1' , 'W2');
 %    save('compressed_blocks', 'compressed_blocks');
 
 end

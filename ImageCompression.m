@@ -144,7 +144,7 @@ classdef ImageCompression
         end
         
         function decompressed_block = put_block_through_weight(obj, comp_block, W)
-            decompressed_block = comp_block' * W;
+            decompressed_block = comp_block(:)' * W;
         end
         
         function grayscale_img = decompressed_img_to_grayscale(obj, decomp_img)
